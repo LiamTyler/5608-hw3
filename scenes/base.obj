@@ -1,0 +1,48 @@
+# Comments start with the pound symbol
+# Vertices are declared with a 'v' and then the x y z coordinates 
+# Each vertex has an implicit index based on their order in the file, 
+# starting at 1.
+
+newmtl Colored
+Ka 0.4 0.4 1.0
+Kd 0.4 0.4 1.0
+
+usemtl [Colored]
+
+# The origin (id = 1), used as the end point for all vectors
+v 0 0 0
+
+# Vertices for the plane (you shouldn't need to change these)
+v 1 1 0
+v -1 1 0
+v -1 -1 0 
+v 1 -1 0
+
+# End point coordinates for vectors
+# normal
+v 0 0 1
+# incidence (set for 45 degrees in XZ plane)
+v -0.70711 0 0.70711
+# reflected
+v 0.70711 0 0.70711
+
+
+# Faces are declared with a 'f' and then the vertex id's in CCW order
+
+# This is the ground plane, you do not need to change this
+f 2 3 4 5
+
+# Lines are declared with 'l' and connects a line between the vertex id's
+
+# Normal vector line (you do not need to change this)
+l 1 6
+
+# Incidence line (you should not change this, just the coordinates for its end 
+# point on line 25)
+l 1 7
+# Reflected line ( "", line 26 )
+l 1 8
+
+# TODO: You will want to add one declaration here per vector in your 
+# reflectance lobe: 'l 1 x' where x is 9 + 0-based index of your vector 
+# (since vertices 1 through 8 are used up already).
