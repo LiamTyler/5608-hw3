@@ -3,7 +3,7 @@
 # The following lines define the size of the output image and the name of
 # of the file containing the result of rendering
 #
-Film "image" "string filename" ["occluder.exr"]
+Film "image" "string filename" ["occluder_random_1.exr"]
 	"integer xresolution" [300] "integer yresolution" [300]
 
 #
@@ -13,7 +13,7 @@ Film "image" "string filename" ["occluder.exr"]
 # up in your final images.
 #
 
-Sampler "lowdiscrepancy" "integer pixelsamples" [1] 
+Sampler "random" "integer pixelsamples" [1] 
 
 #
 # Camera configuration: the camera is located on the Z axis, and is

@@ -1,8 +1,15 @@
+import re
+import matplotlib.pyplot as plt
+import numpy as np
+from pyquaternion import *
+from math import *
+import os
+import subprocess
 
-Film "image" "string filename" ["manykilleroos.exr"]  "integer xresolution" [400] "integer yresolution" [400]
+#Film "image" "string filename" ["manykilleroos.exr"]  "integer xresolution" [400] "integer yresolution" [400]
+#Sampler "lowdiscrepancy" "integer pixelsamples" [64]
 
-Sampler "lowdiscrepancy" "integer pixelsamples" [1]
-Accelerator "kdtree"
+scene1 = """Accelerator "kdtree"
 
 
 #
@@ -10,6 +17,7 @@ Accelerator "kdtree"
 # three versions of the scene for assignment 2
 #
 
+Integrator "directlighting" "integer maxdepth" [5]
 
 # Configuration 1: The entire scene from above
 #LookAt 10 120 -25  0 0 0   -.081 .976 .203
@@ -34,8 +42,10 @@ WorldBegin
 #
 
 AttributeBegin
-AreaLightSource "area" "color L" [200 200 200] "integer nsamples" [1]
-Translate 30 40 -60
+"""
+#AreaLightSource "area" "color L" [200 200 200] "integer nsamples" [1]
+
+scene2 = """Translate 30 40 -60
 Shape "disk" "float radius" [6] 
 AttributeEnd
 
@@ -182,6 +192,31 @@ AttributeEnd
 
 WorldEnd
 
+"""
 
+os.chdir('C:\\Users\\Liam Tyler\\Documents\\School\\5608\\HW1\\pbrt-v3\\build\\results')
 
+powersOf2 = [ 1, 2, 4, 8, 16, 32, 64 ]
 
+for numEyeSamples in powersOf2:
+    print( "Eye:", numEyeSamples )
+    for numLightSamples in powersOf2:
+        print( "Light:", numLightSamples )
+        baseName  = "killeroos/manykilleroos_eye_" + str(numEyeSamples) + "_light_" + str(numLightSamples)
+        imageName = baseName + ".exr"
+
+        scene = ""
+        scene += "Film \"image\" \"string filename\" [\"" + imageName + "\"]  \"integer xresolution\" [400] \"integer yresolution\" [400]\n"
+        scene += "Sampler \"lowdiscrepancy\" \"integer pixelsamples\" [" + str( numEyeSamples ) + "]\n"
+        scene += scene1
+        scene += "AreaLightSource \"area\" \"color L\" [200 200 200] \"integer nsamples\" [" + str( numLightSamples ) + "]\n"
+        scene += scene2
+        #print(scene)
+
+        f = open( 'scene.pbrt', 'w')
+        f.write( scene )
+        f.close()
+        cmd = "..\\Release\\pbrt.exe scene.pbrt > " + baseName + "_log.txt"
+        os.system(cmd)
+        cmd = "..\\Release\\exrdiff.exe ..\\..\\..\\..\\HW3\\part3\\scenes\\manykilleroos_ref.exr " + imageName + " >> " + baseName + "_log.txt"
+        os.system(cmd)
